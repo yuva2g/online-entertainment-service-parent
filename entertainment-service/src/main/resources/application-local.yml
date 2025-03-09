@@ -1,0 +1,64 @@
+server:
+  port: 8095
+
+circuit-breaker:
+  failureRateThreshold: 50
+  waitDurationInOpenState: 10000
+  permittedNumberOfCallsInHalfOpenState: 3
+  slidingWindowSize: 5
+  minimumNumberOfCalls: 10
+
+albums-query-service:
+  url: http://localhost:8096/
+  max-total-connections: 10
+  max-connections-per-route: 10
+  request-timeout-ms: 2000
+  connect-timeout-ms: 400
+  read-timeout-ms: 4000
+
+books-query-service:
+  url: http://localhost:8097/
+  max-total-connections: 10
+  max-connections-per-route: 10
+  request-timeout-ms: 2000
+  connect-timeout-ms: 400
+  read-timeout-ms: 4000
+
+logging:
+  level:
+    root: info
+
+async:
+  corePoolSize: 10
+  maxPoolSize: 20
+  queueCapacity: 100
+  asyncThreadNamePrefix: EntertainmentThreadExecuter-
+
+management:
+  tracing:
+    enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: [info, health, metrics]
+  prometheus:
+    metrics:
+      export:
+        enabled: true
+  metrics:
+    tags:
+      applicationName: ${spring.application.name}
+      environment: local
+    distribution:
+      percentiles:
+        http.server.requests: 0.99
+        http.client.requests: 0.99
+    enable:
+        all: false
+        http.server.requests: true
+        logback.events: true
+        system.cpu.count: true
+        jvm.memory.committed: true
+        jvm.memory.used: true
+        jvm.memory.max: true
+        resilience4j.circuitbreaker: true

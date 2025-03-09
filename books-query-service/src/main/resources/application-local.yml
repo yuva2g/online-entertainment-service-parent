@@ -1,0 +1,66 @@
+server:
+  port: 8097
+
+spring:
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ${google.client-id}
+            client-secret: ${google.client-secret}
+            scope: https://www.googleapis.com/auth/books
+        provider:
+          google:
+            authorization-uri: https://accounts.google.com/o/oauth2/auth
+            token-uri: https://oauth2.googleapis.com/token
+
+circuit-breaker:
+  failureRateThreshold: 50
+  waitDurationInOpenState: 10000
+  permittedNumberOfCallsInHalfOpenState: 3
+  slidingWindowSize: 5
+  minimumNumberOfCalls: 10
+
+google:
+  books:
+    url: https://www.googleapis.com/books/v1
+    connect-timeout-ms: 400
+    read-timeout-ms: 4000
+    default-result-limit: 5
+    client-registration-id: google
+    api-key: AIzaSyDZBHK-1H-rtowiPW3Fv0y9w0pTd_iQTj8
+
+logging:
+  level:
+    root: debug
+
+management:
+  tracing:
+    enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: [info, health, metrics]
+  prometheus:
+    metrics:
+      export:
+        enabled: true
+  metrics:
+    tags:
+      applicationName: ${spring.application.name}
+      environment: local
+    distribution:
+      percentiles:
+        http.server.requests: 0.99
+        http.google-books-api.requests: 0.99
+    enable:
+      all: false
+      http.server.requests: true
+      http.google-books-api.request: true
+      logback.events: true
+      system.cpu.count: true
+      jvm.memory.committed: true
+      jvm.memory.used: true
+      jvm.memory.max: true
+      resilience4j.circuitbreaker: true
