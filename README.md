@@ -51,11 +51,15 @@ Online entertainment service is a collection of 3 services
 ```mvn clean install```
 
 3. Run the project
-```cd <service-name>``` (album-query-service, book-query-service, entertainment-service)
+```cd <service-name>``` (album-query-service, entertainment-service)
 ```mvn spring-boot:run -Dspring-boot.run.profiles=local```
 
+```cd book-query-service```
+```mvn spring-boot:run -Dspring-boot.run.profiles=local -Dgoogle.client-id=<clientId> -Dgoogle.client-ecret=<clientSecret> -Dgoogle.api-key=<apiKey>```
+Note: Google client-id, client-secret and api-key is provided in email.
+
 4. POSTMAN Collection or Browser
-```http://localhost:8095/online-entertainments?searchText=java```
+```http://localhost:8095/online-entertainments?searchText=Datascience```
 
 ### Future Enhancements
 - Config Server, Service Registry, and API Gateway
@@ -68,3 +72,8 @@ Online entertainment service is a collection of 3 services
 - Contract Testing using Pact
 - OpenAPI Documentation
 - Implementing the OAuth2 for Google APIs
+
+### Troubleshooting
+- Check your Java and Maven versions, both should have Java 21 
+  ```java --version```
+  ```mvn -v```

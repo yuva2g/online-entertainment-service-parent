@@ -29,11 +29,11 @@ google:
     read-timeout-ms: 4000
     default-result-limit: 5
     client-registration-id: google
-    api-key: AIzaSyDZBHK-1H-rtowiPW3Fv0y9w0pTd_iQTj8
+    api-key: ${google.api-key}
 
 logging:
   level:
-    root: debug
+    root: info
 
 management:
   tracing:
