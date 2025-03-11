@@ -15,7 +15,8 @@ Online entertainment service is a collection of 3 services
 - Named Query Service for album-query-service and book-query-service to scale based on the number of requests.
 
 #### Design Requirements
-- Stability- ReadTimeout, ConnectTimeout are implemented using WebClient and RestTemplate. Entertainment-service is designed to handle the requests even when Albums or Books Query service is down. 
+- Stability- ReadTimeout, ConnectTimeout are implemented using WebClient and RestTemplate. Entertainment-service is designed to handle the requests even when Albums or Books Query service is down.
+  - Although not ideal to have read timeout of 10000ms, it is set to 10000ms for testing purposes.
 - Resilience- Circuit Breaker is implemented using Resilience4j to handle the failures and timeouts.
 - Performance- CompletableFuture is used to make concurrent calls to the album query service and the book query service.
 - Security- OAuth2 is implemented for the book query service to access the Google Books API.
