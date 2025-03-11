@@ -12,7 +12,7 @@ itunes:
   url: https://itunes.apple.com
   max-total-connections: 10
   max-connections-per-route: 10
-  request-timeout-ms: 2000
+  request-timeout-ms: 10000
   connect-timeout-ms: 400
   read-timeout-ms: 10000
   default-result-limit: 5
