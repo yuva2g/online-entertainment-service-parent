@@ -7,8 +7,8 @@ spring:
       client:
         registration:
           google:
-            client-id: ${google.client-id}
-            client-secret: ${google.client-secret}
+            client-id: ${google_client_id}
+            client-secret: ${google_client_secret}
             scope: https://www.googleapis.com/auth/books
         provider:
           google:
@@ -29,7 +29,6 @@ google:
     read-timeout-ms: 4000
     default-result-limit: 5
     client-registration-id: google
-    api-key: ${google.api-key}
 
 logging:
   level:

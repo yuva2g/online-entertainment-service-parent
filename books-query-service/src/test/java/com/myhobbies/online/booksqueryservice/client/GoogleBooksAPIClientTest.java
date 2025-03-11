@@ -1,6 +1,7 @@
 package com.myhobbies.online.booksqueryservice.client;
 
 import com.myhobbies.online.booksqueryservice.client.models.Volumes;
+import com.myhobbies.online.booksqueryservice.config.googlebooksapi.GoogleBooksConnectionProperties;
 import com.myhobbies.online.booksqueryservice.exception.GoogleBooksAPIServiceException;
 import io.github.resilience4j.circuitbreaker.CircuitBreaker;
 import io.github.resilience4j.circuitbreaker.CircuitBreakerConfig;
@@ -36,7 +37,9 @@ class GoogleBooksAPIClientTest {
                 .build();
         CircuitBreakerRegistry circuitBreakerRegistry = CircuitBreakerRegistry.of(circuitBreakerConfig);
         CircuitBreaker circuitBreaker = circuitBreakerRegistry.circuitBreaker("googleBooksCircuitBreaker");
-        googleBooksAPIClient = new GoogleBooksAPIClient(webClient, circuitBreaker);
+        GoogleBooksConnectionProperties googleBooksConnectionProperties = new GoogleBooksConnectionProperties();
+        googleBooksConnectionProperties.setApiKey("TestApiKey");
+        googleBooksAPIClient = new GoogleBooksAPIClient(webClient, circuitBreaker, googleBooksConnectionProperties);
     }
 
     @AfterEach
@@ -65,8 +68,8 @@ class GoogleBooksAPIClientTest {
         Volumes result = googleBooksAPIClient.getVolumes("Test", 5);
 
         assertEquals(1, result.items().size());
-        assertEquals("Test Title", result.items().get(0).volumeInfo().title());
-        assertEquals("Test Author", result.items().get(0).volumeInfo().authors().get(0));
+        assertEquals("Test Title", result.items().getFirst().volumeInfo().title());
+        assertEquals("Test Author", result.items().getFirst().volumeInfo().authors().getFirst());
     }
 
     @Test

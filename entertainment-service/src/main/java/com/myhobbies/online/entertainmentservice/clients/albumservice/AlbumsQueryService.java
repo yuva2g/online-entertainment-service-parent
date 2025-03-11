@@ -3,6 +3,7 @@ package com.myhobbies.online.entertainmentservice.clients.albumservice;
 import com.myhobbies.online.entertainmentservice.clients.albumservice.response.Album;
 import com.myhobbies.online.entertainmentservice.clients.albumservice.response.AlbumsResponseTranslator;
 import com.myhobbies.online.entertainmentservice.config.ExternalService;
+import com.myhobbies.online.entertainmentservice.config.albumsqueryservice.AlbumsQueryServiceProperties;
 import com.myhobbies.online.entertainmentservice.exception.ExternalServiceException;
 import com.myhobbies.online.entertainmentservice.models.Entertainment;
 import io.github.resilience4j.circuitbreaker.CircuitBreaker;
@@ -29,9 +30,13 @@ public class AlbumsQueryService {
 
     private final CircuitBreaker albumsQueryCircuitBreaker;
 
+    private final AlbumsQueryServiceProperties albumsQueryServiceProperties;
+
     @Timed(value = "http.album-query-service.request", extraTags = {"backend", "album-query-service", "operation", "getAlbums"})
-    public List<Entertainment> getAlbums(String searchText) {
-        Supplier<List<Entertainment>> responseSupplier = getAlbumResultsSupplier(searchText);
+    public List<Entertainment> getAlbums(String searchText, Integer limit) {
+
+        int limitValue = limit == null ? albumsQueryServiceProperties.getDefaultResultLimit() : limit;
+        Supplier<List<Entertainment>> responseSupplier = getAlbumResultsSupplier(searchText, limitValue);
 
         return albumsQueryCircuitBreaker.executeSupplier(SupplierUtils.recover(responseSupplier, exception -> {
             log.warn("Error while retrieving albums from albums-query-service {}", exception.getMessage());
@@ -42,13 +47,13 @@ public class AlbumsQueryService {
         }));
     }
 
-    private Supplier<List<Entertainment>> getAlbumResultsSupplier(String searchText) {
+    private Supplier<List<Entertainment>> getAlbumResultsSupplier(String searchText, int limitValue) {
 
         return CircuitBreaker.decorateSupplier(albumsQueryCircuitBreaker, () -> {
             try {
                 ResponseEntity<List<Album>> responseEntity =
                         albumsQueryRestTemplate.exchange(
-                                "/albums?searchText=" + searchText,
+                                "/albums?searchText=" + searchText + "&limit=" + limitValue,
                                 HttpMethod.GET,
                                 null,
                                 new ParameterizedTypeReference<>() {

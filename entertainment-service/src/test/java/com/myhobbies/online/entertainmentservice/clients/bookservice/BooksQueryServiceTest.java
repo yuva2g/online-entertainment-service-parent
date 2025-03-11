@@ -1,6 +1,7 @@
 package com.myhobbies.online.entertainmentservice.clients.bookservice;
 
 import com.myhobbies.online.entertainmentservice.clients.bookservice.response.Book;
+import com.myhobbies.online.entertainmentservice.config.booksqueryservice.BooksQueryServiceProperties;
 import com.myhobbies.online.entertainmentservice.models.Entertainment;
 import io.github.resilience4j.circuitbreaker.CircuitBreaker;
 import org.junit.jupiter.api.BeforeEach;
@@ -29,7 +30,9 @@ class BooksQueryServiceTest {
     void setUp() {
         restTemplate = Mockito.mock(RestTemplate.class);
         circuitBreaker = Mockito.mock(CircuitBreaker.class);
-        booksQueryService = new BooksQueryService(restTemplate, circuitBreaker);
+        BooksQueryServiceProperties booksQueryServiceProperties = new BooksQueryServiceProperties();
+        booksQueryServiceProperties.setDefaultResultLimit(5);
+        booksQueryService = new BooksQueryService(restTemplate, circuitBreaker, booksQueryServiceProperties);
     }
 
     @Test
@@ -42,11 +45,11 @@ class BooksQueryServiceTest {
                 .thenReturn(responseEntity);
         Mockito.when(circuitBreaker.executeSupplier(any(Supplier.class))).thenAnswer(invocation -> ((Supplier<?>) invocation.getArgument(0)).get());
 
-        List<Entertainment> result = booksQueryService.getBooks("Test");
+        List<Entertainment> result = booksQueryService.getBooks("Test", 2);
 
         assertEquals(1, result.size());
-        assertEquals("Test Title", result.get(0).getTitle());
-        assertEquals("Test Author", result.get(0).getAuthors().get(0));
+        assertEquals("Test Title", result.getFirst().getTitle());
+        assertEquals("Test Author", result.getFirst().getAuthors().getFirst());
     }
 
     @Test
@@ -57,7 +60,7 @@ class BooksQueryServiceTest {
                 .thenReturn(responseEntity);
         Mockito.when(circuitBreaker.executeSupplier(any(Supplier.class))).thenAnswer(invocation -> ((Supplier<?>) invocation.getArgument(0)).get());
 
-        List<Entertainment> result = booksQueryService.getBooks("Test");
+        List<Entertainment> result = booksQueryService.getBooks("Test", null);
 
         assertEquals(0, result.size());
     }
@@ -68,7 +71,7 @@ class BooksQueryServiceTest {
                 .thenThrow(new RuntimeException("Service unavailable"));
         Mockito.when(circuitBreaker.executeSupplier(any(Supplier.class))).thenAnswer(invocation -> ((Supplier<?>) invocation.getArgument(0)).get());
 
-        List<Entertainment> result = booksQueryService.getBooks("Test");
+        List<Entertainment> result = booksQueryService.getBooks("Test", 2);
         assertEquals(0, result.size());
     }
 }

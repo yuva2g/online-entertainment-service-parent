@@ -28,7 +28,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
             WebRequest request
     ) {
         return handleExceptionInternal(exception,
-                buildErrorResponse(HttpStatus.BAD_REQUEST.value(), INVALID_REQUEST),
+                buildErrorResponse(HttpStatus.BAD_REQUEST.value(), INVALID_REQUEST + ": " + exception.getMessage()),
                 new HttpHeaders(),
                 HttpStatus.BAD_REQUEST, request);
     }
@@ -54,7 +54,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
             WebRequest request
     ) {
         return handleExceptionInternal(exception,
-                buildErrorResponse(HttpStatus.BAD_REQUEST.value(), INVALID_REQUEST),
+                buildErrorResponse(HttpStatus.BAD_REQUEST.value(), INVALID_REQUEST + ": " + exception.getMessage()),
                 new HttpHeaders(),
                 HttpStatus.BAD_REQUEST, request);
     }

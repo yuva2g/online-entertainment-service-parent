@@ -14,6 +14,7 @@ import java.util.concurrent.Executor;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.doAnswer;
@@ -35,7 +36,7 @@ class EntertainmentServiceTest {
     }
 
     @Test
-    void getEntertainmentOptions_ValidRequest_ReturnsSortedEntertainmentOptions() throws Exception {
+    void getEntertainmentOptions_ValidRequest_ReturnsSortedEntertainmentOptions() {
         List<Entertainment> albums = List.of(
                 Entertainment.builder().title("Album B").entertainmentType(EntertainmentType.ALBUM).build(),
                 Entertainment.builder().title("Album A").entertainmentType(EntertainmentType.ALBUM).build()
@@ -45,8 +46,8 @@ class EntertainmentServiceTest {
                 Entertainment.builder().title("Book A").entertainmentType(EntertainmentType.BOOK).build()
         );
 
-        when(albumsQueryService.getAlbums(anyString())).thenReturn(albums);
-        when(booksQueryService.getBooks(anyString())).thenReturn(books);
+        when(albumsQueryService.getAlbums(anyString(), anyInt())).thenReturn(albums);
+        when(booksQueryService.getBooks(anyString(), anyInt())).thenReturn(books);
 
         doAnswer(invocation -> {
             Runnable task = invocation.getArgument(0);
@@ -54,7 +55,7 @@ class EntertainmentServiceTest {
             return null;
         }).when(executor).execute(any(Runnable.class));
 
-        List<Entertainment> result = entertainmentService.getEntertainmentOptions("Test");
+        List<Entertainment> result = entertainmentService.getEntertainmentOptions("Test", 2);
 
         assertEquals(4, result.size());
         assertEquals("Album A", result.get(0).getTitle());
@@ -65,8 +66,8 @@ class EntertainmentServiceTest {
 
     @Test
     void getEntertainmentOptions_AlbumsServiceThrowsException_ThrowsEntertainmentServiceException() {
-        when(albumsQueryService.getAlbums(anyString())).thenThrow(new RuntimeException("Service unavailable"));
-        when(booksQueryService.getBooks(anyString())).thenReturn(List.of());
+        when(albumsQueryService.getAlbums(anyString(), anyInt())).thenThrow(new RuntimeException("Service unavailable"));
+        when(booksQueryService.getBooks(anyString(), anyInt())).thenReturn(List.of());
 
         doAnswer(invocation -> {
             Runnable task = invocation.getArgument(0);
@@ -74,13 +75,13 @@ class EntertainmentServiceTest {
             return null;
         }).when(executor).execute(any(Runnable.class));
 
-        assertThrows(EntertainmentServiceException.class, () -> entertainmentService.getEntertainmentOptions("Test"));
+        assertThrows(EntertainmentServiceException.class, () -> entertainmentService.getEntertainmentOptions("Test", 2));
     }
 
     @Test
     void getEntertainmentOptions_BooksServiceThrowsException_ThrowsEntertainmentServiceException() {
-        when(albumsQueryService.getAlbums(anyString())).thenReturn(List.of());
-        when(booksQueryService.getBooks(anyString())).thenThrow(new RuntimeException("Service unavailable"));
+        when(albumsQueryService.getAlbums(anyString(), anyInt())).thenReturn(List.of());
+        when(booksQueryService.getBooks(anyString(), anyInt())).thenThrow(new RuntimeException("Service unavailable"));
 
         doAnswer(invocation -> {
             Runnable task = invocation.getArgument(0);
@@ -88,6 +89,6 @@ class EntertainmentServiceTest {
             return null;
         }).when(executor).execute(any(Runnable.class));
 
-        assertThrows(EntertainmentServiceException.class, () -> entertainmentService.getEntertainmentOptions("Test"));
+        assertThrows(EntertainmentServiceException.class, () -> entertainmentService.getEntertainmentOptions("Test", 2));
     }
 }

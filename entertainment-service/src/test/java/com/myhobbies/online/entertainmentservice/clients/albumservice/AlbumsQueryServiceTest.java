@@ -1,6 +1,7 @@
 package com.myhobbies.online.entertainmentservice.clients.albumservice;
 
 import com.myhobbies.online.entertainmentservice.clients.albumservice.response.Album;
+import com.myhobbies.online.entertainmentservice.config.albumsqueryservice.AlbumsQueryServiceProperties;
 import com.myhobbies.online.entertainmentservice.models.Entertainment;
 import io.github.resilience4j.circuitbreaker.CircuitBreaker;
 import org.junit.jupiter.api.BeforeEach;
@@ -29,7 +30,9 @@ class AlbumsQueryServiceTest {
     void setUp() {
         restTemplate = Mockito.mock(RestTemplate.class);
         circuitBreaker = Mockito.mock(CircuitBreaker.class);
-        albumsQueryService = new AlbumsQueryService(restTemplate, circuitBreaker);
+        AlbumsQueryServiceProperties albumsQueryServiceProperties = new AlbumsQueryServiceProperties();
+        albumsQueryServiceProperties.setDefaultResultLimit(5);
+        albumsQueryService = new AlbumsQueryService(restTemplate, circuitBreaker, albumsQueryServiceProperties);
     }
 
     @Test
@@ -42,7 +45,7 @@ class AlbumsQueryServiceTest {
                 .thenReturn(responseEntity);
         Mockito.when(circuitBreaker.executeSupplier(any(Supplier.class))).thenAnswer(invocation -> ((Supplier<?>) invocation.getArgument(0)).get());
 
-        List<Entertainment> result = albumsQueryService.getAlbums("Test");
+        List<Entertainment> result = albumsQueryService.getAlbums("Test", 2);
 
         assertEquals(1, result.size());
         assertEquals("Test Album", result.getFirst().getTitle());
@@ -57,7 +60,7 @@ class AlbumsQueryServiceTest {
                 .thenReturn(responseEntity);
         Mockito.when(circuitBreaker.executeSupplier(any(Supplier.class))).thenAnswer(invocation -> ((Supplier<?>) invocation.getArgument(0)).get());
 
-        List<Entertainment> result = albumsQueryService.getAlbums("Test");
+        List<Entertainment> result = albumsQueryService.getAlbums("Test", null);
 
         assertEquals(0, result.size());
     }
@@ -68,7 +71,7 @@ class AlbumsQueryServiceTest {
                 .thenThrow(new RuntimeException("Service unavailable"));
         Mockito.when(circuitBreaker.executeSupplier(any(Supplier.class))).thenAnswer(invocation -> ((Supplier<?>) invocation.getArgument(0)).get());
 
-        List<Entertainment> result = albumsQueryService.getAlbums("Test");
+        List<Entertainment> result = albumsQueryService.getAlbums("Test", 2);
         assertEquals(0, result.size());
     }
 }

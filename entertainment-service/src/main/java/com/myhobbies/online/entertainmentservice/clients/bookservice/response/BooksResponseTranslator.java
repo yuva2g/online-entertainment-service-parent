@@ -15,7 +15,7 @@ public class BooksResponseTranslator {
     private static Entertainment mapToEntertainment(Book book) {
         return Entertainment.builder()
                 .title(book.title())
-                .authors(book.author())
+                .authors(book.authors())
                 .entertainmentType(EntertainmentType.BOOK)
                 .build();
     }

@@ -13,6 +13,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
 
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -40,10 +41,11 @@ class EntertainmentControllerTest {
                         .entertainmentType(EntertainmentType.BOOK)
                         .build());
 
-        Mockito.when(entertainmentService.getEntertainmentOptions(anyString())).thenReturn(entertainmentOptions);
+        Mockito.when(entertainmentService.getEntertainmentOptions(anyString(), anyInt())).thenReturn(entertainmentOptions);
 
         mockMvc.perform(get("/online-entertainments")
-                        .param("searchText", "Test"))
+                        .param("searchText", "Test")
+                        .param("resultsPerType", "2"))
                 .andDo(result -> System.out.println(result.getResponse().getContentAsString()))
                 .andExpect(status().isOk())
                 .andExpect(content().json("[{'title':'Test Title','authors':['Test Author'],'entertainmentType':'ALBUM'},{'title':'Test Title','authors':['Test Author'],'entertainmentType':'BOOK'}]"));
@@ -53,10 +55,11 @@ class EntertainmentControllerTest {
     public void getEntertainmentOptions_ValidRequest_ReturnsEmptyEntertainmentOptions() throws Exception {
         List<Entertainment> entertainmentOptions = List.of();
 
-        Mockito.when(entertainmentService.getEntertainmentOptions(anyString())).thenReturn(entertainmentOptions);
+        Mockito.when(entertainmentService.getEntertainmentOptions(anyString(), anyInt())).thenReturn(entertainmentOptions);
 
         mockMvc.perform(get("/online-entertainments")
-                        .param("searchText", "Test"))
+                        .param("searchText", "Test")
+                        .param("resultsPerType", "2"))
                 .andExpect(status().isOk())
                 .andExpect(content().json("[]"));
     }
@@ -65,6 +68,14 @@ class EntertainmentControllerTest {
     public void getEntertainmentOptions_InvalidSearchText_ReturnsBadRequest() throws Exception {
         mockMvc.perform(get("/online-entertainments")
                         .param("searchText", "Test!"))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void getEntertainmentOptions_InvalidResultsPerType_ReturnsBadRequest() throws Exception {
+        mockMvc.perform(get("/online-entertainments")
+                        .param("searchText", "Test")
+                        .param("resultsPerType", "-1"))
                 .andExpect(status().isBadRequest());
     }
 

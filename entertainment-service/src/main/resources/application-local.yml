@@ -15,6 +15,7 @@ albums-query-service:
   request-timeout-ms: 2000
   connect-timeout-ms: 400
   read-timeout-ms: 4000
+  default-result-limit: 5
 
 books-query-service:
   url: http://localhost:8097/
@@ -23,6 +24,7 @@ books-query-service:
   request-timeout-ms: 2000
   connect-timeout-ms: 400
   read-timeout-ms: 4000
+  default-result-limit: 5
 
 logging:
   level:

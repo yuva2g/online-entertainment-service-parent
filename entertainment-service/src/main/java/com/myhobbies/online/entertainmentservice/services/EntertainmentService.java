@@ -25,21 +25,21 @@ public class EntertainmentService {
     private final AlbumsQueryService albumsQueryService;
     private final BooksQueryService booksQueryService;
 
-    public List<Entertainment> getEntertainmentOptions(String searchText) {
+    public List<Entertainment> getEntertainmentOptions(String searchText, Integer limit) {
 
         List<Entertainment> entertainments = new ArrayList<>();
 
-        asyncGetEntertainments(searchText, entertainments);
+        asyncGetEntertainments(searchText, limit, entertainments);
 
         entertainments.sort(Comparator.comparing(Entertainment::getTitle));
         return entertainments;
     }
 
-    private void asyncGetEntertainments(String searchText, List<Entertainment> entertainments) {
+    private void asyncGetEntertainments(String searchText, Integer limit, List<Entertainment> entertainments) {
         CompletableFuture<List<Entertainment>> albumsFuture =
-                CompletableFuture.supplyAsync(() -> albumsQueryService.getAlbums(searchText), executor);
+                CompletableFuture.supplyAsync(() -> albumsQueryService.getAlbums(searchText, limit), executor);
         CompletableFuture<List<Entertainment>> booksFuture =
-                CompletableFuture.supplyAsync(() -> booksQueryService.getBooks(searchText), executor);
+                CompletableFuture.supplyAsync(() -> booksQueryService.getBooks(searchText, limit), executor);
         try {
             List<Entertainment> albumEntertainments= albumsFuture.get();
             List<Entertainment> bookEntertainments= booksFuture.get();

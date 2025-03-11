@@ -1,12 +1,12 @@
 package com.myhobbies.online.booksqueryservice.client;
 
 import com.myhobbies.online.booksqueryservice.client.models.Volumes;
+import com.myhobbies.online.booksqueryservice.config.googlebooksapi.GoogleBooksConnectionProperties;
 import com.myhobbies.online.booksqueryservice.exception.GoogleBooksAPIServiceException;
 import io.github.resilience4j.circuitbreaker.CircuitBreaker;
 import io.github.resilience4j.reactor.circuitbreaker.operator.CircuitBreakerOperator;
 import io.micrometer.core.annotation.Timed;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.ClientResponse;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -20,8 +20,7 @@ public class GoogleBooksAPIClient {
 
     private final CircuitBreaker googleBooksCircuitBreaker;
 
-    @Value("${google.books.api-key}")
-    private String apiKey;
+    private final GoogleBooksConnectionProperties googleBooksConnectionProperties;
 
     @Timed(value = "http.google-books-api.request", extraTags = {"backend", "google-books-api", "operation", "getVolumes"})
     public Volumes getVolumes(String searchText, int limit) {
@@ -30,7 +29,7 @@ public class GoogleBooksAPIClient {
                         .path("/volumes")
                         .queryParam("q", searchText)
                         .queryParam("maxResults", limit)
-                        .queryParam("key", apiKey)
+                        .queryParam("key", googleBooksConnectionProperties.getApiKey())
                         .build())
                 .retrieve()
                 .onStatus(
