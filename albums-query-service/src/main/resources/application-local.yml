@@ -14,7 +14,7 @@ itunes:
   max-connections-per-route: 10
   request-timeout-ms: 2000
   connect-timeout-ms: 400
-  read-timeout-ms: 4000
+  read-timeout-ms: 10000
   default-result-limit: 5
 
 logging:

@@ -15,11 +15,11 @@ Online entertainment service is a collection of 3 services
 - Named Query Service for album-query-service and book-query-service to scale based on the number of requests.
 
 #### Design Requirements
-Stability- ReadTimeout, ConnectTimeout are implemented using WebClient and RestTemplate. Entertainment-service is designed to handle the requests even when Albums or Books Query service is down. 
-Resilience- Circuit Breaker is implemented using Resilience4j to handle the failures and timeouts.
-Performance- CompletableFuture is used to make concurrent calls to the album query service and the book query service.
-Security- OAuth2 is implemented for the book query service to access the Google Books API.
-Scalability- entertainment-service is designed to scale based on the number of requests.
+- Stability- ReadTimeout, ConnectTimeout are implemented using WebClient and RestTemplate. Entertainment-service is designed to handle the requests even when Albums or Books Query service is down. 
+- Resilience- Circuit Breaker is implemented using Resilience4j to handle the failures and timeouts.
+- Performance- CompletableFuture is used to make concurrent calls to the album query service and the book query service.
+- Security- OAuth2 is implemented for the book query service to access the Google Books API.
+- Scalability- entertainment-service is designed to scale based on the number of requests.
 
 1. entertainment-service
    - Acts as an aggregator service (BFF)
@@ -60,24 +60,24 @@ Scalability- entertainment-service is designed to scale based on the number of r
 
 ### Installation
 1. Clone the repository
-```git clone http://github.com/yuva2g/online-entertainment-service.git```
-```cd online-entertainment-service-parent```
+   - ```git clone http://github.com/yuva2g/online-entertainment-service.git```
+   - ```cd online-entertainment-service-parent```
 
 2. Build the project
-```mvn clean install```
+   - ```mvn clean install```
 
 3. Run the project in separate terminals
-   - Open new terminal and navigate to the project directory `online-entertainment-service`
-      - ```cd album-query-service``` 
+   - Open new terminal and navigate to the project directory `online-entertainment-service-parent`
+      - ```cd albums-query-service``` 
       - ```mvn spring-boot:run -Dspring-boot.run.profiles=local```
 
-   - Open new terminal and navigate to the project directory `online-entertainment-service`
+   - Open new terminal and navigate to the project directory `online-entertainment-service-parent`
       - ```cd books-query-service```
    
       DO NOT RUN BELOW COMMAND, use command provided in email.
       - ```mvn spring-boot:run -Dspring-boot.run.arguments="--spring.profiles.active=local --google_client_id=<client-id> --google_client_secret=<client-secret> --google.books.api-key=<api-key>"```
 
-   - Open new terminal and navigate to the project directory `online-entertainment-service`
+   - Open new terminal and navigate to the project directory `online-entertainment-service-parent`
       - ```cd entertainment-service```
       - ```mvn spring-boot:run -Dspring-boot.run.profiles=local```
 
@@ -103,5 +103,5 @@ Scalability- entertainment-service is designed to scale based on the number of r
 
 ### Troubleshooting
 - Check your Java and Maven versions, both should have Java 21 
-  ```java --version```
-  ```mvn -v```
+  - ```java --version```
+  - ```mvn -v```

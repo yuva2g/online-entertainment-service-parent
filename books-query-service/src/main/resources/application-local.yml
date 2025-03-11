@@ -26,7 +26,7 @@ google:
   books:
     url: https://www.googleapis.com/books/v1
     connect-timeout-ms: 400
-    read-timeout-ms: 4000
+    read-timeout-ms: 10000
     default-result-limit: 5
     client-registration-id: google
 
