@@ -106,3 +106,5 @@ Online entertainment service is a collection of 3 services
 - Check your Java and Maven versions, both should have Java 21 
   - ```java --version```
   - ```mvn -v```
+- Read Timeouts sometimes when ITunes API or Google Books API is slow and requesting more data
+  - As mentioned earlier increasing read timeout and request timeout is not ideal, but can be done for testing purposes.
