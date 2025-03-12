@@ -82,9 +82,10 @@ Online entertainment service is a collection of 3 services
       - ```cd entertainment-service```
       - ```mvn spring-boot:run -Dspring-boot.run.profiles=local```
 
-4. POSTMAN Collection or Browser or swagger
+4. Browser or swagger or POSTMAN Collection
     - http://localhost:8095/online-entertainments?searchText=Believe```
     - http://localhost:8095/swagger-ui/index.html
+    - [online-entertainment-system.postman_collection.json](online-entertainment-system.postman_collection.json)
 
 5. Cucumber Test
     - Make sure the entertainment-service, album-query-service, and book-query-service are running

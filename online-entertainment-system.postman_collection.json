@@ -1,0 +1,134 @@
+{
+	"info": {
+		"_postman_id": "19147c9b-772c-4a60-98df-6b984f18dbb7",
+		"name": "Assignment",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "30258040"
+	},
+	"item": [
+		{
+			"name": "Sample iTunes API",
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {}
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"url": {
+					"raw": "https://itunes.apple.com/search?term=Believer&limit=6&entity=album",
+					"protocol": "https",
+					"host": [
+						"itunes",
+						"apple",
+						"com"
+					],
+					"path": [
+						"search"
+					],
+					"query": [
+						{
+							"key": "term",
+							"value": "Believer"
+						},
+						{
+							"key": "limit",
+							"value": "6"
+						},
+						{
+							"key": "entity",
+							"value": "album"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET /albums",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8096/albums?searchText=Believer&limit=1",
+					"host": [
+						"localhost"
+					],
+					"port": "8096",
+					"path": [
+						"albums"
+					],
+					"query": [
+						{
+							"key": "searchText",
+							"value": "Believer"
+						},
+						{
+							"key": "limit",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET /books",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8097/books?searchText=HeadFirst&limit=5",
+					"host": [
+						"localhost"
+					],
+					"port": "8097",
+					"path": [
+						"books"
+					],
+					"query": [
+						{
+							"key": "searchText",
+							"value": "HeadFirst"
+						},
+						{
+							"key": "limit",
+							"value": "5"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET /online-entertainments",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8095/online-entertainments?searchText=Data science",
+					"host": [
+						"localhost"
+					],
+					"port": "8095",
+					"path": [
+						"online-entertainments"
+					],
+					"query": [
+						{
+							"key": "searchText",
+							"value": "Data science"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
